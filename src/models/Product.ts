@@ -7,8 +7,12 @@ const productSchema = new Schema(
     precio: { type: Number,  },
     categoria: { type: String,},
     image: { type: String },
+    stock: { type: Number, default: 0 },
+    
+    createdBy: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { versionKey: false, 
+    timestamps: true,
     collection: "products" }
 );
 

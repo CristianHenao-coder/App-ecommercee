@@ -76,31 +76,7 @@ export default function RegisterPage() {
             className="w-full p-3 rounded-lg bg-white/10 border border-gray-500 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
 
-          {/* 🧍 Rol */}
-          <div className="flex justify-between items-center text-sm text-gray-300">
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="role"
-                value="client"
-                checked={form.role === "client"}
-                onChange={handleChange}
-                className="accent-green-500"
-              />
-              Cliente
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="role"
-                value="admin"
-                checked={form.role === "admin"}
-                onChange={handleChange}
-                className="accent-green-500"
-              />
-              Administrador
-            </label>
-          </div>
+        
 
           {error && (
             <p className="text-red-400 text-sm text-center bg-red-900/30 p-2 rounded-md">
