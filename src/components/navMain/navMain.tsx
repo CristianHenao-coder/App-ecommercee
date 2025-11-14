@@ -12,6 +12,13 @@ export default function NavMain() {
             Inicio
           </Link>
         </li>
+        
+        <li>
+          <Link href="/collections" className="hover:underline">
+            Colección
+          </Link>
+        </li>
+
         <li>
           <Link href="/login" className="hover:underline">
             Login

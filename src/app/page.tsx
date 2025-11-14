@@ -1,22 +1,19 @@
 "use client";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
-import axios from "axios";
 import { Product } from "@/interfaces/interfaces";
 import { Notificaction } from "@/helpers/utils";
+import { getProducts } from "@/services/products";
+
+import { sendContact } from "@/services/contact";
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState("");
   
-  
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const res = await axios.get("/api/products");
-      setProducts(res.data);
-    };
-    fetchProducts();
+   useEffect(() => {
+    getProducts().then(setProducts);
   }, []);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -29,8 +26,7 @@ export default function HomePage() {
   setStatus("Enviando...");
 
   try {
-    await axios.post("/api/contact", form);
-
+    await sendContact(form);
     // ✅ Notificación visual
     Notificaction("✅ Gracias por contactarte, pronto te responderemos.", "success");
 
