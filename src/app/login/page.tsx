@@ -15,9 +15,9 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.put("/api/user", form);
+       const res = await axios.post("/api/login", form);
       if (res.data.success) {
-        router.push("/"); // ✅ Ir al inicio si login exitoso
+        router.push("/"); // Ir al inicio si login exitoso
       } else {
         setError(res.data.message || "Error al iniciar sesión");
       }

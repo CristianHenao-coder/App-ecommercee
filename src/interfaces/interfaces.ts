@@ -15,3 +15,15 @@ export interface ContactForm {
   email: string;
   message: string;
 }
+
+
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  avatar?: string;
+  phone?: string;
+  role: string;
+  tiendaId?: string | null;
+}

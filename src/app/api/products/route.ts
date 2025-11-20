@@ -9,7 +9,7 @@ export async function GET() {
     const products = await Product.find().lean();
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
-    console.error("❌ Error al obtener productos:", error);
+    console.error("Error al obtener productos:", error);
     return NextResponse.json(
       { success: false, message: "Error al cargar productos" },
       { status: 500 }
