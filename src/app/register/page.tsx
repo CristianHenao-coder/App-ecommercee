@@ -6,9 +6,29 @@ import axios from "axios";
 import { signIn } from "next-auth/react";
 import { Notificaction } from "@/helpers/utils";
 
+import * as yup from "yup";
+
+// ✅ Esquema Yup definido AQUÍ MISMO para que no haya líos de imports
+const registerSchema = yup.object({
+  name: yup
+    .string()
+    .required("El nombre es obligatorio")
+    .min(2, "El nombre es muy corto"),
+  email: yup
+    .string()
+    .required("El correo es obligatorio")
+    .email("El correo no es válido"),
+  password: yup
+    .string()
+    .required("La contraseña es obligatoria")
+    .min(6, "La contraseña debe tener mínimo 6 caracteres"),
+  phone: yup.string().nullable(),
+  role: yup.string().optional(),
+});
 
 export default function RegisterPage() {
   const router = useRouter();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -16,22 +36,52 @@ export default function RegisterPage() {
     phone: "",
     role: "client",
   });
-  const [error, setError] = useState("");
+
+  // 👇 guardamos TODOS los errores de Yup
+  const [errors, setErrors] = useState<string[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors([]);
+
     try {
+      console.log("VALIDANDO FORM >>>", form);
+
+      //  1. Validación con Yup
+      await registerSchema.validate(form, { abortEarly: false });
+
+      console.log("VALIDACIÓN OK, ENVIANDO A /api/user");
+
+      //  2. Si todo bien, mandamos al backend
       await axios.post("/api/user", form);
-       Notificaction(" Registro exitoso, redirigiendo al login...", "success");
-       setTimeout(() => {
-         router.push("/login");
-       }, 1000);
-    } catch (err) {
-      setError("Error al registrarse. Intenta de nuevo.");
-    }
+
+      Notificaction("✅ Registro exitoso, redirigiendo al login...", "success");
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 1000);
+    } catch (err: any) {
+  console.log("ERROR EN REGISTER >>>", err);
+
+  if (err instanceof yup.ValidationError) {
+    // errores del FRONT (por si no dejas enviar aún)
+    const msgs = err.errors as string[];
+    setErrors(msgs);
+    Notificaction(msgs[0], "error");
+    return;
+  }
+
+  // Errores del backend (/api/user)
+  const msg =
+    err?.response?.data?.message ||
+    "Error al registrarse. Intenta de nuevo.";
+  setErrors([msg]);
+  Notificaction(msg, "error");
+}
+
   };
 
   const handleGoogleLogin = async () => {
@@ -45,13 +95,13 @@ export default function RegisterPage() {
           Crear cuenta
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* noValidate desactiva la validación del navegador */}
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <input
             name="name"
             placeholder="Nombre completo"
             onChange={handleChange}
             className="w-full p-3 rounded-lg bg-white/10 border border-gray-500 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
           />
           <input
             name="email"
@@ -59,7 +109,6 @@ export default function RegisterPage() {
             placeholder="Correo electrónico"
             onChange={handleChange}
             className="w-full p-3 rounded-lg bg-white/10 border border-gray-500 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
           />
           <input
             name="password"
@@ -67,7 +116,6 @@ export default function RegisterPage() {
             placeholder="Contraseña"
             onChange={handleChange}
             className="w-full p-3 rounded-lg bg-white/10 border border-gray-500 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
           />
           <input
             name="phone"
@@ -76,12 +124,13 @@ export default function RegisterPage() {
             className="w-full p-3 rounded-lg bg-white/10 border border-gray-500 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
 
-        
-
-          {error && (
-            <p className="text-red-400 text-sm text-center bg-red-900/30 p-2 rounded-md">
-              {error}
-            </p>
+          {/* mostramos TODOS los errores de Yup */}
+          {errors.length > 0 && (
+            <div className="space-y-1 bg-red-900/30 border border-red-500/50 p-2 rounded-md text-sm text-red-300">
+              {errors.map((err, idx) => (
+                <p key={idx}>• {err}</p>
+              ))}
+            </div>
           )}
 
           <button
@@ -99,7 +148,7 @@ export default function RegisterPage() {
           <hr className="flex-grow border-gray-600" />
         </div>
 
-        {/* 🔘 Botón de Google */}
+        {/*  Botón de Google */}
         <button
           type="button"
           onClick={handleGoogleLogin}
