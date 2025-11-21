@@ -1,104 +1,70 @@
 import { NextResponse } from "next/server";
 import dbConnection from "@/lib/db";
-import Contact from "@/models/User";
 import User from "@/models/User";
-
-
-export async function GET() {
-  try {
-    await dbConnection();
-    const users = await Contact.find();
-
-    if (!users || users.length === 0) {
-      return NextResponse.json(
-        { success: false, message: "No hay usuarios registrados." },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(
-      {
-        success: true,
-        count: users.length,
-        data: users,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("❌ Error en GET /api/contact:", error);
-    return NextResponse.json(
-      { success: false, message: "Error interno del servidor" },
-      { status: 500 }
-    );
-  }
-};
-
-
+import bcrypt from "bcryptjs";
+import * as yup from "yup";
+import { registerSchema } from "@/schema/register.schema";
 
 export async function POST(request: Request) {
   try {
     await dbConnection();
-    const { name, email, password, phone, role } = await request.json();
+    const body = await request.json();
 
-    if (!name || !email || !password) {
+    // ✅ Validación con Yup en el BACKEND
+    const { name, email, password, phone, role } =
+      await registerSchema.validate(body, { abortEarly: false });
+
+    const existing = await User.findOne({ email });
+    if (existing) {
       return NextResponse.json(
-        { success: false, message: "Faltan campos obligatorios." },
+        { success: false, message: "Este correo ya está registrado." },
         { status: 400 }
       );
     }
 
-    
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await User.create({
       name,
       email,
-      password,
+      password: hashedPassword,
       phone,
-      role: role || "client", 
+      role: role === "client" ? "cliente" : role || undefined,
     });
 
+    const userSafe = {
+      _id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      avatar: newUser.avatar,
+      phone: newUser.phone,
+      role: newUser.role,
+      tiendaId: newUser.tiendaId,
+    };
 
-    
     return NextResponse.json(
-      { success: true, message: "Usuario registrado correctamente", data: newUser },
+      {
+        success: true,
+        message: "Usuario registrado correctamente",
+        data: userSafe,
+      },
       { status: 201 }
     );
   } catch (error) {
-    console.error("❌ Error en POST /api/user:", error);
-    return NextResponse.json(
-      { success: false, message: "Error interno del servidor" },
-      { status: 500 }
-    );
-  }
-}
-
-// 👉 Login
-export async function PUT(request: Request) {
-  try {
-    await dbConnection();
-    const { email, password } = await request.json();
-
-    const user = await User.findOne({ email });
-
-    if (!user) {
+    //  Si falla Yup, devolvemos directamente el mensaje de validación
+    if (error instanceof yup.ValidationError) {
+      const firstError = error.errors[0] ?? "Datos inválidos";
       return NextResponse.json(
-        { success: false, message: "Usuario no encontrado" },
-        { status: 404 }
+        {
+          success: false,
+          message: firstError, // 👈 AQUÍ VA "Por favor ingresa un número de celular válido"
+          errors: error.errors,
+        },
+        { status: 400 }
       );
     }
 
-    if (user.password !== password) {
-      return NextResponse.json(
-        { success: false, message: "Contraseña incorrecta" },
-        { status: 401 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: true, message: "Login exitoso", user },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("❌ Error en PUT /api/user:", error);
+    console.error("Error en POST /api/user:", error);
     return NextResponse.json(
       { success: false, message: "Error interno del servidor" },
       { status: 500 }

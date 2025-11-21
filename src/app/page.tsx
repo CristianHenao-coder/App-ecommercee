@@ -5,6 +5,10 @@ import { Notificaction } from "@/helpers/utils";
 import { getProducts } from "@/services/products";
 
 import { sendContact } from "@/services/contact";
+import { registerSchema } from "@/schema/auth.schema";
+import axios from "axios";
+import router from "next/router";
+import * as yup from 'yup';
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -19,31 +23,40 @@ export default function HomePage() {
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
- const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
 
-  // Mostrar texto temporal mientras se envía
-  setStatus("Enviando...");
+    try {
+      // ✅ 1. Validar en el FRONT con Yup
+      await registerSchema.validate(form, { abortEarly: false });
 
-  try {
-    await sendContact(form);
-    // ✅ Notificación visual
-    Notificaction("✅ Gracias por contactarte, pronto te responderemos.", "success");
+      // ✅ 2. Si todo está bien, llamar al backend
+      await axios.post("/api/user", form);
 
-    // Limpia el formulario
-    setForm({ name: "", email: "", message: "" });
+      Notificaction("✅ Registro exitoso, redirigiendo al login...", "success");
 
-    // Oculta el texto “Enviando...” y muestra confirmación simple
-    setStatus("Mensaje enviado correctamente ✅");
-  } catch (error) {
-    console.error(error);
-    Notificaction("❌ Error al enviar el mensaje. Intenta nuevamente.", "error");
-    setStatus("Error al enviar el mensaje ❌");
-  } finally {
-    // Borra el estado después de unos segundos para mantener limpio
-    setTimeout(() => setStatus(""), 4000);
-  }
-};
+      setTimeout(() => {
+        router.push("/login");
+      }, 1000);
+    } catch (err: any) {
+      // Errores de validación de Yup
+      if (err instanceof yup.ValidationError) {
+        const msg = err.errors.join(". ");
+        setError(msg);
+        Notificaction(msg, "error");
+        return;
+      }
+
+      // Errores del backend (/api/user)
+      const msg =
+        err?.response?.data?.message ||
+        "Error al registrarse. Intenta de nuevo.";
+      setError(msg);
+      Notificaction(msg, "error");
+    }
+  };
+
 
 
   return (
@@ -149,3 +162,7 @@ export default function HomePage() {
     </div>
   );
 }
+function setError(arg0: string) {
+  throw new Error("Function not implemented.");
+}
+

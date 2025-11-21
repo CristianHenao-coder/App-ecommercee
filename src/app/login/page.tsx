@@ -23,7 +23,7 @@ export default function LoginPage() {
       }
     } catch (err) {
       setError("Credenciales incorrectas");
-    }
+    } console.log("exitoso la valicacion")
   };
 
   return (

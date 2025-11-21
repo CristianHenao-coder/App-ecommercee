@@ -1,24 +1,10 @@
-
 import { NextResponse } from "next/server";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/db";
 import * as yup from "yup";
-
+import { loginSchema } from "@/schema/auth.schema";
 import type { IUser } from "@/interfaces/interfaces";
-
-export const loginSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email("El correo no es válido")
-    .required("El correo es obligatorio"),
-
-  password: yup
-    .string()
-    .required("La contraseña es obligatoria")
-    .min(6, "La contraseña debe tener mínimo 6 caracteres"),
-});
-
 
 export async function POST(request: Request) {
   try {
@@ -28,7 +14,6 @@ export async function POST(request: Request) {
 
     // Validación con Yup
     const validatedData = await loginSchema.validate(body, { abortEarly: false });
-
     const { email, password } = validatedData;
 
     // Buscar usuario
@@ -50,26 +35,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // Todo OK
+    // Ocultar contraseña antes de responder
+    const { password: _password, ...userSafe } = user;
+
     return NextResponse.json(
-      { message: "Login exitoso", user },
+      { message: "Login exitoso", user: userSafe },
       { status: 200 }
     );
-
-  }  catch (error) {
-
+  } catch (error) {
     if (error instanceof yup.ValidationError) {
-      return NextResponse.json(
-        { error: error.errors },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: error.errors }, { status: 400 });
     }
 
     if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json(

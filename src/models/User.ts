@@ -1,4 +1,5 @@
 import mongoose, {  Schema, model, models } from "mongoose";
+import { number } from "yup";
 
 const userSchema = new Schema(
   {
@@ -6,7 +7,7 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     avatar: { type: String }, // foto opcional del perfil
-    phone: { type: String, required: false },
+    phone: { type: Number, required: false },
     role: { type: String, default: "cliente" },
 
 
