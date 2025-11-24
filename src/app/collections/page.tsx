@@ -2,8 +2,17 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { Product } from "@/interfaces/interfaces";
+import { useCart } from "@/contexts/CartContext";
+import { useSession } from "@/contexts/SessionContext";
+import { Notificaction } from "@/helpers/utils";
+import Link from "next/link";
+import axios from "axios";
 
 export default function CollectionPage() {
+  const { addToCart } = useCart();
+  const { user } = useSession();
+  const [likedProducts, setLikedProducts] = useState<Set<string>>(new Set());
+  const [favoriteProducts, setFavoriteProducts] = useState<Set<string>>(new Set());
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
@@ -18,6 +27,75 @@ export default function CollectionPage() {
     }
     load();
   }, []);
+
+  // Cargar likes y favoritos del usuario
+  useEffect(() => {
+    if (user?._id) {
+      axios.get(`/api/likes?userId=${user._id}`).then((res) => {
+        if (res.data.success) {
+          const liked = new Set(res.data.likes.map((l: any) => l.productId.toString()));
+          setLikedProducts(liked);
+        }
+      });
+
+      axios.get(`/api/favorites?userId=${user._id}`).then((res) => {
+        if (res.data.success) {
+          const favs = new Set(res.data.favorites.map((f: any) => f.productId.toString()));
+          setFavoriteProducts(favs);
+        }
+      });
+    }
+  }, [user]);
+
+  const handleLike = async (productId: string) => {
+    if (!user) {
+      Notificaction("Debes iniciar sesión para dar like", "error");
+      return;
+    }
+
+    const isLiked = likedProducts.has(productId);
+    try {
+      if (isLiked) {
+        await axios.delete(`/api/likes?userId=${user._id}&productId=${productId}`);
+        setLikedProducts((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(productId);
+          return newSet;
+        });
+      } else {
+        await axios.post("/api/likes", { userId: user._id, productId });
+        setLikedProducts((prev) => new Set(prev).add(productId));
+      }
+    } catch (error) {
+      Notificaction("Error al actualizar like", "error");
+    }
+  };
+
+  const handleFavorite = async (productId: string) => {
+    if (!user) {
+      Notificaction("Debes iniciar sesión para guardar favoritos", "error");
+      return;
+    }
+
+    const isFav = favoriteProducts.has(productId);
+    try {
+      if (isFav) {
+        await axios.delete(`/api/favorites?userId=${user._id}&productId=${productId}`);
+        setFavoriteProducts((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(productId);
+          return newSet;
+        });
+        Notificaction("Eliminado de favoritos", "success");
+      } else {
+        await axios.post("/api/favorites", { userId: user._id, productId });
+        setFavoriteProducts((prev) => new Set(prev).add(productId));
+        Notificaction("Agregado a favoritos", "success");
+      }
+    } catch (error) {
+      Notificaction("Error al actualizar favoritos", "error");
+    }
+  };
 
   // 🔥 2. Usamos useMemo para FILTRAR sin efectos, la forma correcta
   const filtered = useMemo(() => {
@@ -112,6 +190,52 @@ export default function CollectionPage() {
               <p className="text-xs text-gray-500 uppercase mt-1">
                 {p.categoria}
               </p>
+              <div className="mt-4 flex gap-2 items-center">
+                <button
+                  onClick={() => handleLike(p._id || "")}
+                  className={`p-2 rounded-lg transition-colors ${
+                    likedProducts.has(p._id || "")
+                      ? "text-red-500"
+                      : "text-gray-400 hover:text-red-500"
+                  }`}
+                  title="Like"
+                >
+                  ❤️
+                </button>
+                <button
+                  onClick={() => handleFavorite(p._id || "")}
+                  className={`p-2 rounded-lg transition-colors ${
+                    favoriteProducts.has(p._id || "")
+                      ? "text-yellow-500"
+                      : "text-gray-400 hover:text-yellow-500"
+                  }`}
+                  title="Favorito"
+                >
+                  ⭐
+                </button>
+                <Link
+                  href={`/products/${p._id}`}
+                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-white text-center py-2 rounded-lg transition-colors"
+                >
+                  Ver Detalles
+                </Link>
+                <button
+                  onClick={() => {
+                    addToCart({
+                      _id: p._id || "",
+                      name: p.name,
+                      precio: p.precio,
+                      image: p.image,
+                      cantidad: 1,
+                      tiendaId: p.tiendaId,
+                    });
+                    Notificaction("✅ Producto agregado al carrito", "success");
+                  }}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-colors"
+                >
+                  Agregar
+                </button>
+              </div>
             </div>
           ))}
         </div>

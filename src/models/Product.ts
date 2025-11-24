@@ -8,7 +8,7 @@ const productSchema = new Schema(
     categoria: { type: String,},
     image: { type: String },
     stock: { type: Number, default: 0 },
-    
+    tiendaId: { type: Schema.Types.ObjectId, ref: "Tienda" },
     createdBy: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { versionKey: false, 

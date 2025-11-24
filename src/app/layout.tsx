@@ -1,10 +1,14 @@
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import NavMain from "@/components/navMain/navMain";
+import Footer from "@/components/footer/footer";
+import { SessionProvider } from "@/contexts/SessionContext";
+import { CartProvider } from "@/contexts/CartContext";
+import { I18nProvider } from "@/contexts/I18nContext";
 
 export const metadata = {
-  title: "Ecommerce App",
-  description: "Aplicación ecommerce profesional con Next.js y MongoDB",
+  title: "LookGod - El Verbo hecho Style",
+  description: "Marketplace de moda con propósito. Viste con poder, viste con propósito.",
 };
 
 export default function RootLayout({
@@ -14,10 +18,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className="bg-gray-50 text-gray-900">
-        <NavMain />
-        {children}
-        <ToastContainer/>
+      <body className="bg-black text-white min-h-screen flex flex-col">
+        <I18nProvider>
+          <SessionProvider>
+            <CartProvider>
+              <NavMain />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <ToastContainer/>
+            </CartProvider>
+          </SessionProvider>
+        </I18nProvider>
       </body>
     </html>
   );

@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "home": "Home",
+    "collections": "Collection",
+    "myCollections": "My Collections",
+    "cart": "Cart",
+    "profile": "Profile",
+    "myBusiness": "My Business",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "hello": "Hello"
+  },
+  "auth": {
+    "login": "Sign in",
+    "register": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full name",
+    "phone": "Phone",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?"
+  },
+  "profile": {
+    "title": "My Profile",
+    "edit": "Edit Profile",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "createBusiness": "Create my business",
+    "role": "Role",
+    "emailCannotEdit": "Email cannot be modified"
+  },
+  "store": {
+    "dashboard": "Dashboard",
+    "business": "My Business",
+    "products": "Products",
+    "content": "Content / Posts",
+    "wallet": "Wallet",
+    "addProduct": "Add Product",
+    "noProducts": "You don't have products yet",
+    "createFirst": "Create your first product"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "clear": "Clear Cart"
+  },
+  "footer": {
+    "copyright": "© 2025 LookGod – Cristian Henao - coder",
+    "vision": "With a vision and a faith: expand the gospel to every nation. The Word made style."
+  }
+}
+

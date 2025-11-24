@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useSession } from "@/contexts/SessionContext";
+import { Notificaction } from "@/helpers/utils";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useSession();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
@@ -14,16 +17,22 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     try {
-       const res = await axios.post("/api/login", form);
-      if (res.data.success) {
+      const res = await axios.post("/api/login", form);
+      if (res.data.user) {
+        login(res.data.user);
+        Notificaction("✅ Inicio de sesión exitoso", "success");
         router.push("/"); // Ir al inicio si login exitoso
       } else {
         setError(res.data.message || "Error al iniciar sesión");
+        Notificaction(res.data.message || "Error al iniciar sesión", "error");
       }
-    } catch (err) {
-      setError("Credenciales incorrectas");
-    } console.log("exitoso la valicacion")
+    } catch (err: unknown) {
+      const errorMsg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Credenciales incorrectas";
+      setError(errorMsg);
+      Notificaction(errorMsg, "error");
+    }
   };
 
   return (

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     await dbConnection();
     const body = await request.json();
 
-    // ✅ Validación con Yup en el BACKEND
+    // Validación con Yup en el BACKEND
     const { name, email, password, phone, role } =
       await registerSchema.validate(body, { abortEarly: false });
 
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: firstError, // 👈 AQUÍ VA "Por favor ingresa un número de celular válido"
+          message: firstError,
           errors: error.errors,
         },
         { status: 400 }
@@ -67,6 +67,50 @@ export async function POST(request: Request) {
     console.error("Error en POST /api/user:", error);
     return NextResponse.json(
       { success: false, message: "Error interno del servidor" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    await dbConnection();
+    const body = await request.json();
+    const { _id, name, phone, avatar } = body;
+
+    if (!_id) {
+      return NextResponse.json(
+        { success: false, message: "ID de usuario requerido" },
+        { status: 400 }
+      );
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { name, phone, avatar },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return NextResponse.json(
+        { success: false, message: "Usuario no encontrado" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Perfil actualizado correctamente",
+        user: updatedUser,
+      },
+      { status: 200 }
+    );
+  } catch (error: unknown) {
+    console.error("Error en PUT /api/user:", error);
+    const errorMessage = error instanceof Error ? error.message : "Error al actualizar perfil";
+    return NextResponse.json(
+      { success: false, message: errorMessage },
       { status: 500 }
     );
   }

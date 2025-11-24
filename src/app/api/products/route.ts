@@ -9,10 +9,18 @@ import { productSchema } from "@/schema/product.schema"
 export const runtime = "nodejs"; // aseguramos entorno Node para Cloudinary
 
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await dbConnection();
-    const products = await Product.find().lean();
+    const { searchParams } = new URL(request.url);
+    const tiendaId = searchParams.get("tiendaId");
+
+    let query: any = {};
+    if (tiendaId) {
+      query.tiendaId = tiendaId;
+    }
+
+    const products = await Product.find(query).lean();
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
     console.error("Error al obtener productos:", error);
@@ -51,6 +59,7 @@ export async function POST(request: Request) {
       ? Number(formData.get("stock"))
       : undefined;
     const createdBy = formData.get("createdBy") as string | null;
+    const tiendaId = formData.get("tiendaId") as string | null;
     const imageFile = formData.get("image") as File | null;
 
     // Validar con Yup usando los mismos campos que el modelo
@@ -84,6 +93,7 @@ export async function POST(request: Request) {
       categoria,
       stock,
       createdBy: createdBy || undefined,
+      tiendaId: tiendaId || undefined,
       image: imageUrl,
     });
 

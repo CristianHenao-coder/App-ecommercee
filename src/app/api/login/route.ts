@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     const { password: _password, ...userSafe } = user;
 
     return NextResponse.json(
-      { message: "Login exitoso", user: userSafe },
+      { success: true, message: "Login exitoso", user: userSafe },
       { status: 200 }
     );
   } catch (error) {
