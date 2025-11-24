@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "collections": "Colección",
+    "myCollections": "Mis Colecciones",
+    "cart": "Carrito",
+    "profile": "Perfil",
+    "myBusiness": "Mi Negocio",
+    "login": "Login",
+    "register": "Registrarme",
+    "logout": "Salir",
+    "hello": "Hola"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "register": "Crear cuenta",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "name": "Nombre completo",
+    "phone": "Teléfono",
+    "noAccount": "¿No tienes cuenta?",
+    "haveAccount": "¿Ya tienes cuenta?"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "edit": "Editar Perfil",
+    "save": "Guardar Cambios",
+    "cancel": "Cancelar",
+    "createBusiness": "Crear mi negocio",
+    "role": "Rol",
+    "emailCannotEdit": "El correo no se puede modificar"
+  },
+  "store": {
+    "dashboard": "Dashboard",
+    "business": "Mi Negocio",
+    "products": "Productos",
+    "content": "Contenido / Posts",
+    "wallet": "Wallet",
+    "addProduct": "Agregar Producto",
+    "noProducts": "No tienes productos aún",
+    "createFirst": "Crear tu primer producto"
+  },
+  "cart": {
+    "title": "Carrito de Compras",
+    "empty": "Tu carrito está vacío",
+    "subtotal": "Subtotal",
+    "shipping": "Envío",
+    "total": "Total",
+    "checkout": "Proceder al Pago",
+    "clear": "Vaciar Carrito"
+  },
+  "footer": {
+    "copyright": "© 2025 LookGod – Cristian Henao - coder",
+    "vision": "Con una visión y una fe: expandir el evangelio a toda nación. El Verbo hecho estilo."
+  }
+}
+
