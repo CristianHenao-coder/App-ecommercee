@@ -9,7 +9,7 @@ const productSchema = new Schema(
     image: { type: String },
     stock: { type: Number, default: 0 },
     
-    createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+    createdBy: { type: Schema.Types.ObjectId, ref: "User", required: false },
   },
   { versionKey: false, 
     timestamps: true,

@@ -28,13 +28,13 @@ export default function HomePage() {
     setError("");
 
     try {
-      // ✅ 1. Validar en el FRONT con Yup
+      // 1. Validar en el FRONT con Yup
       await registerSchema.validate(form, { abortEarly: false });
 
-      // ✅ 2. Si todo está bien, llamar al backend
+      // 2. Si todo está bien, llamar al backend
       await axios.post("/api/user", form);
 
-      Notificaction("✅ Registro exitoso, redirigiendo al login...", "success");
+      Notificaction(" Registro exitoso, redirigiendo al login...", "success");
 
       setTimeout(() => {
         router.push("/login");
@@ -61,29 +61,27 @@ export default function HomePage() {
 
   return (
     <div className="bg-black text-white min-h-screen">
-      {/* 🟩 SECCIÓN 1: PORTADA */}
-      <section className="flex flex-col items-center justify-center text-center py-20">
-        <h1 className="text-6xl font-extrabold tracking-tight mb-4">
-          <span className="text-white">look</span>
-          <span className="text-gray-200 ml-2">GOD</span>
-        </h1>
-        <p className="text-xl italic mb-6"> El Verbo hecho Style </p>
+      {/*  SECCIÓN 1: PORTADA */}
+      <section className="relative flex flex-col items-center justify-center text-center py-20">
+
+        {/* TEXTO GIGANTE DE FONDO */}
+       <h1 className="absolute top-1/2 -translate-y-1/2 text-[18rem] font-extrabold text-white tracking-tight select-none pointer-events-none flex gap-10">
+          <span>LOOK</span>
+          <span>GOD</span>
+      </h1>
+
+      
+
+        <p className="text-3xl italic mb-6 relative z-10">El Verbo hecho Style</p>
+
         <img
-          src="/images/hero.jpg"
+          src="/image/portada.png"
           alt="LookGod Hero"
-          className="w-full max-w-3xl rounded-xl shadow-lg border border-gray-800"
+          className="w-full max-w-3xl rounded-xl shadow-lg border relative z-10"
         />
-        <div className="mt-6 flex flex-col sm:flex-row justify-center gap-6">
-          <p className="text-sm uppercase tracking-widest">
-            Viste con poder ✨
-          </p>
-          <p className="text-sm uppercase tracking-widest">
-            Viste con propósito 🙌
-          </p>
-        </div>
       </section>
 
-      {/* 🟨 SECCIÓN 2: PRODUCTOS */}
+      {/* SECCIÓN 2: PRODUCTOS */}
       <section className="py-16 bg-white text-black text-center">
         <h2 className="text-4xl font-semibold mb-10">Nuestras Camisetas</h2>
         <p className="max-w-2xl mx-auto mb-12 text-gray-700 italic">
@@ -116,7 +114,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 🟦 SECCIÓN 3: CONTACTO */}
+      {/*  SECCIÓN 3: CONTACTO */}
       <section className="py-16 px-6 bg-black text-center border-t border-gray-800">
         <h2 className="text-3xl font-semibold mb-8">Contáctanos</h2>
         <form

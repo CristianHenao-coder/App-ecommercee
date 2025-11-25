@@ -8,7 +8,7 @@ import { Notificaction } from "@/helpers/utils";
 
 import * as yup from "yup";
 
-// ✅ Esquema Yup definido AQUÍ MISMO para que no haya líos de imports
+// Esquema Yup definido AQUÍ MISMO para que no haya líos de imports
 const registerSchema = yup.object({
   name: yup
     .string()
@@ -37,7 +37,7 @@ export default function RegisterPage() {
     role: "client",
   });
 
-  // 👇 guardamos TODOS los errores de Yup
+  // guardamos TODOS los errores de Yup
   const [errors, setErrors] = useState<string[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
