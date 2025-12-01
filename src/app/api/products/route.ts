@@ -1,14 +1,13 @@
-
 import { NextResponse } from "next/server";
 import dbConnection from "@/lib/db";
 import Product from "@/models/Product";
-import cloudinary from "@/lib/cloudinary";
 import * as yup from "yup";
-import { productSchema } from "@/schema/product.schema"
+import { productSchema } from "@/schema/product.schema";
+import { uploadImage } from "@/lib/cloudinary";
 
-export const runtime = "nodejs"; // aseguramos entorno Node para Cloudinary
+export const runtime = "nodejs";
 
-
+// Obtener productos
 export async function GET() {
   try {
     await dbConnection();
@@ -23,14 +22,24 @@ export async function GET() {
   }
 }
 
-// Crear producto (JSON o FormData + imagen)
+// Crear producto (JSON o FormData + imagen) - Solo admin
 export async function POST(request: Request) {
   try {
+    const { requireAdmin } = await import("@/helpers/auth");
+    const { isAdmin } = await requireAdmin(request);
+
+    if (!isAdmin) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized: Admin access required" },
+        { status: 403 }
+      );
+    }
+
     await dbConnection();
 
     const contentType = request.headers.get("content-type") || "";
 
-    // MODO 1: JSON puro (compatibilidad con lo que ya tenías)
+    // MODO 1: JSON puro (compatibilidad)
     if (contentType.includes("application/json")) {
       const body = await request.json(); // { name, descripcion, precio, categoria, image, ... }
 
@@ -40,51 +49,62 @@ export async function POST(request: Request) {
       return NextResponse.json(newProduct, { status: 201 });
     }
 
-    // MODO 2: multipart/form-data (para subir imagen desde el frontend)
+    // MODO 2: multipart/form-data (imagen desde el frontend)
     const formData = await request.formData();
 
-    const name = formData.get("name") as string;
-    const descripcion = formData.get("descripcion") as string;
+    // Campos multiidioma
+    const name_es = (formData.get("name_es") as string) || "";
+    const name_en = (formData.get("name_en") as string) || "";
+    const descripcion_es = (formData.get("descripcion_es") as string) || "";
+    const descripcion_en = (formData.get("descripcion_en") as string) || "";
+
+    // Legacy
+    const nameLegacy = (formData.get("name") as string) || "";
+    const descripcionLegacy = (formData.get("descripcion") as string) || "";
+
     const precio = Number(formData.get("precio"));
-    const categoria = formData.get("categoria") as string;
+    const categoria = (formData.get("categoria") as string) || "";
     const stock = formData.get("stock")
       ? Number(formData.get("stock"))
       : undefined;
-    const createdBy = formData.get("createdBy") as string | null;
+    const createdBy = (formData.get("createdBy") as string) || undefined;
     const imageFile = formData.get("image") as File | null;
 
-    // Validar con Yup usando los mismos campos que el modelo
+    const finalName = name_es || nameLegacy;
+    const finalDescripcion = descripcion_es || descripcionLegacy;
+
     await productSchema.validate(
-      { name, descripcion, precio, categoria, stock, createdBy: createdBy || undefined },
+      {
+        name: finalName,
+        descripcion: finalDescripcion,
+        precio,
+        categoria,
+        stock,
+        createdBy,
+      },
       { abortEarly: false }
     );
 
-    let imageUrl = "";
+    let imageUrl: string | undefined;
 
     if (imageFile) {
-      const bytes = await imageFile.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      imageUrl = await new Promise<string>((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: "lookgod/products" },
-          (error, result) => {
-            if (error || !result) return reject(error);
-            resolve(result.secure_url);
-          }
-        );
-        uploadStream.end(buffer);
-      });
+      imageUrl = await uploadImage(imageFile);
     }
 
     const newProduct = await Product.create({
-      name,
-      descripcion,
+      // multiidioma
+      name_es: name_es || undefined,
+      name_en: name_en || undefined,
+      descripcion_es: descripcion_es || undefined,
+      descripcion_en: descripcion_en || undefined,
+      // legacy
+      name: finalName,
+      descripcion: finalDescripcion,
       precio,
       categoria,
       stock,
-      createdBy: createdBy || undefined,
-      image: imageUrl,
+      createdBy,
+      image: imageUrl, // no guardamos "" si no hay imagen
     });
 
     return NextResponse.json(newProduct, { status: 201 });
@@ -104,4 +124,3 @@ export async function POST(request: Request) {
     );
   }
 }
-  

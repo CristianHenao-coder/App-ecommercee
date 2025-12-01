@@ -8,20 +8,43 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { paymentService } from "@/services/payments";
 import { useRouter } from "next/navigation";
 import { Notificaction } from "@/helpers/utils";
+import { getProductName } from "@/helpers/productI18n";
 
 export default function CheckoutPage() {
     const { items, total, clearCart } = useCart();
     const { user, isAuthenticated } = useAuth();
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const router = useRouter();
     const [paypalClientId, setPaypalClientId] = useState<string>("");
 
     useEffect(() => {
-        // Fetch PayPal client ID from backend or use env var
-        // For now, we'll use a placeholder. In production, fetch from API or use NEXT_PUBLIC_PAYPAL_CLIENT_ID
-        const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "";
-        setPaypalClientId(clientId);
-    }, []);
+        // Fetch PayPal client ID from backend API
+        const fetchClientId = async () => {
+            try {
+                const response = await fetch("/api/paypal/client-id");
+                const data = await response.json();
+                if (data.clientId) {
+                    setPaypalClientId(data.clientId);
+                } else {
+                    // Fallback to env var if API fails
+                    const fallbackId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "";
+                    if (fallbackId) {
+                        setPaypalClientId(fallbackId);
+                    } else {
+                        Notificaction(t("checkout.error") || "PayPal not configured", "error");
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching PayPal client ID:", error);
+                // Fallback to env var
+                const fallbackId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "";
+                if (fallbackId) {
+                    setPaypalClientId(fallbackId);
+                }
+            }
+        };
+        fetchClientId();
+    }, [t]);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -104,9 +127,9 @@ export default function CheckoutPage() {
                             {items.map((item) => (
                                 <div key={item._id} className="flex justify-between items-center">
                                     <div className="flex items-center gap-3">
-                                        <img src={item.image} alt={item.name} className="w-12 h-12 rounded object-cover" />
+                                        <img src={item.image} alt={getProductName(item, language)} className="w-12 h-12 rounded object-cover" />
                                         <div>
-                                            <p className="font-semibold">{item.name}</p>
+                                            <p className="font-semibold">{getProductName(item, language)}</p>
                                             <p className="text-sm text-gray-400">x{item.quantity}</p>
                                         </div>
                                     </div>

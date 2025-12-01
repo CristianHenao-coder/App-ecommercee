@@ -1,4 +1,4 @@
-import mongoose, {  Schema, model, models } from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 import { number } from "yup";
 
 const userSchema = new Schema(
@@ -6,17 +6,17 @@ const userSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    avatar: { type: String }, // foto opcional del perfil
-    phone: { type: Number, required: false },
-    role: { type: String, default: "cliente" },
-
+    avatarUrl: { type: String }, // foto opcional del perfil
+    phone: { type: String, required: false }, // Changed to String for better phone handling
+    role: { type: String, default: "client" }, // Changed default to "client" to match other parts of the app
+    cart: { type: Array, default: [] }, // Array of { productId, quantity }
 
     // Si el usuario crea una tienda, guardamos su tienda aquí
     tiendaId: { type: Schema.Types.ObjectId, ref: "Tienda", default: null },
   },
   {
-     timestamps: true,
-     collection: "users",
+    timestamps: true,
+    collection: "users",
   }
 
 );

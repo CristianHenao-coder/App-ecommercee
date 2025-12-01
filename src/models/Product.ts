@@ -2,10 +2,16 @@ import mongoose, { Schema, model, models } from "mongoose";
 
 const productSchema = new Schema(
   {
-    name: { type: String,},
-    descripcion: { type: String,  },
-    precio: { type: Number,  },
-    categoria: { type: String,},
+    // Legacy fields (for backward compatibility)
+    name: { type: String },
+    descripcion: { type: String },
+    // New multilingual fields
+    name_es: { type: String },
+    name_en: { type: String },
+    descripcion_es: { type: String },
+    descripcion_en: { type: String },
+    precio: { type: Number },
+    categoria: { type: String },
     image: { type: String },
     stock: { type: Number, default: 0 },
     

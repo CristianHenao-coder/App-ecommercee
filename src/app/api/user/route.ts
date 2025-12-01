@@ -3,7 +3,9 @@ import dbConnection from "@/lib/db";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import * as yup from "yup";
-import { registerSchema } from "@/schema/register.schema";
+import { registerSchema } from "@/schema/auth.schema";
+import { sendEmail } from "@/helpers/email";
+import { welcomeEmailTemplate } from "@/utils/emailTemplates";
 
 export async function POST(request: Request) {
   try {
@@ -36,11 +38,21 @@ export async function POST(request: Request) {
       _id: newUser._id,
       name: newUser.name,
       email: newUser.email,
-      avatar: newUser.avatar,
+      avatarUrl: newUser.avatarUrl,
       phone: newUser.phone,
       role: newUser.role,
       tiendaId: newUser.tiendaId,
     };
+
+    // Send welcome email (non-blocking)
+    sendEmail(
+      newUser.email,
+      "¡Bienvenido a LookGod! 🎉",
+      welcomeEmailTemplate(newUser.name)
+    ).catch((error) => {
+      console.error("Error sending welcome email (non-critical):", error);
+      // Don't fail registration if email fails
+    });
 
     return NextResponse.json(
       {
