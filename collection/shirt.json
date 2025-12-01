@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Camiseta JESUS Premium",
+    "descripcion": "Camiseta oversize 100% algodón, diseño inspirado en el poder del verbo hecho estilo.",
+    "precio": 99000,
+    "categoria": "Camisetas",
+    "image": "/images/prod1.jpg"
+  },
+  {
+    "name": "Camiseta Bendición Blanca",
+    "descripcion": "Diseño minimalista con la frase 'Cada palabra es una bendición'.",
+    "precio": 89000,
+    "categoria": "Camisetas",
+    "image": "/images/prod2.jpg"
+  },
+  {
+    "name": "Camiseta Poder Negro",
+    "descripcion": "Viste con poder. Mensaje grabado con tinta ecológica y duradera.",
+    "precio": 95000,
+    "categoria": "Camisetas",
+    "image": "/images/prod3.jpg"
+  }
+]
