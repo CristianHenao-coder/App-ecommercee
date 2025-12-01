@@ -3,6 +3,8 @@ import cloudinary from "@/lib/cloudinary";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 
+export const runtime = "nodejs";
+
 export async function POST(request: Request) {
     try {
         await dbConnect();
@@ -18,7 +20,8 @@ export async function POST(request: Request) {
         }
 
         const arrayBuffer = await file.arrayBuffer();
-        const buffer = new Uint8Array(arrayBuffer);
+        // Usar Buffer.from para Node.js en lugar de Uint8Array
+        const buffer = Buffer.from(arrayBuffer);
 
         const result = await new Promise<any>((resolve, reject) => {
             cloudinary.uploader.upload_stream(

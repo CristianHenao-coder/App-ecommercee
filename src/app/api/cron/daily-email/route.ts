@@ -4,15 +4,7 @@ import User from "@/models/User";
 import { sendEmail } from "@/helpers/email";
 import { dailyPromoEmailTemplate } from "@/utils/emailTemplates";
 
-/**
- * Cron job endpoint for sending daily promotional emails
- * Can be called by external cron services (e.g., cron-job.org, Vercel Cron)
- * 
- * Example cron setup:
- * - URL: https://yourdomain.com/api/cron/daily-email
- * - Method: GET
- * - Schedule: Daily at 9 AM
- */
+
 export async function GET(request: Request) {
     try {
         // Optional: Add authentication header check for security

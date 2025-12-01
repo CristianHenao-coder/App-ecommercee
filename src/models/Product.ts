@@ -11,7 +11,10 @@ const productSchema = new Schema(
     descripcion_es: { type: String },
     descripcion_en: { type: String },
     precio: { type: Number },
-    categoria: { type: String },
+    categoria: {
+      type: String,
+      set: (value: string) => value?.toLowerCase() || value, // Normalizar a minúsculas automáticamente
+    },
     image: { type: String },
     stock: { type: Number, default: 0 },
     

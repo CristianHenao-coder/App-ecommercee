@@ -3,11 +3,15 @@ import axios from "axios";
 const API_URL = "/api";
 
 export const profileService = {
-    getProfile: async () => {
-        const response = await axios.get(`${API_URL}/profile`);
+    getProfile: async (email?: string) => {
+        const headers: Record<string, string> = {};
+        if (email) {
+            headers["x-user-email"] = email;
+        }
+        const response = await axios.get(`${API_URL}/profile`, { headers });
         return response.data;
     },
-    updateProfile: async (data: any) => {
+    updateProfile: async (data: { email: string; name?: string; phone?: string; avatarUrl?: string }) => {
         const response = await axios.put(`${API_URL}/profile`, data);
         return response.data;
     },

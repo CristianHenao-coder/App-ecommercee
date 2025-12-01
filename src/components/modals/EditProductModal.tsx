@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { productService } from "@/services/products";
 import { Product } from "@/interfaces/interfaces";
 import {
   Dialog,
@@ -19,7 +20,6 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import { productService } from "@/services/products";
 
 interface EditProductModalProps {
   open: boolean;
@@ -28,7 +28,7 @@ interface EditProductModalProps {
   onUpdated: () => void;
 }
 
-const VALID_CATEGORIES = ["camisetas", "hoddies", "accesorios"];
+const CATEGORY_OPTIONS = ["camisetas", "hoddies", "accesorios"];
 
 export default function EditProductModal({
   open,
@@ -43,17 +43,15 @@ export default function EditProductModal({
   const [name_en, setNameEn] = useState("");
   const [descripcion_es, setDescripcionEs] = useState("");
   const [descripcion_en, setDescripcionEn] = useState("");
-
   const [name, setName] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState("");
   const [categoria, setCategoria] = useState("camisetas");
   const [image, setImage] = useState<File | null>(null);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Cargar datos del producto al abrir el modal
+  // Cargar datos del producto cuando se abre
   useEffect(() => {
     if (!product) return;
 
@@ -61,33 +59,26 @@ export default function EditProductModal({
     setNameEn((product as any).name_en || "");
     setDescripcionEs((product as any).descripcion_es || "");
     setDescripcionEn((product as any).descripcion_en || "");
-
-    setName(product.name || "");
+    setName((product as any).name || "");
     setDescripcion((product as any).descripcion || "");
-
-    // precio como string para el input
-    setPrecio(
-      typeof product.precio === "number"
-        ? product.precio.toString()
-        : (product as any).precio?.toString() || ""
+    setPrecio(product.precio ? String(product.precio) : "");
+    const cat = product.categoria || "camisetas";
+    setCategoria(
+      CATEGORY_OPTIONS.includes(cat) ? cat : "camisetas"
     );
-
-    // categoría segura: si no es válida, usamos "camisetas"
-    const cat = (product as any).categoria || "camisetas";
-    setCategoria(VALID_CATEGORIES.includes(cat) ? cat : "camisetas");
-
     setImage(null);
     setError(null);
   }, [product, open]);
 
   const handleClose = () => {
+    setImage(null);
     setError(null);
     onClose();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!product?._id) return;
+    if (!product || !product._id) return;
 
     setLoading(true);
     setError(null);
@@ -95,32 +86,31 @@ export default function EditProductModal({
     try {
       const formData = new FormData();
 
-      // Campos multiidioma
       if (name_es) formData.append("name_es", name_es.trim());
       if (name_en) formData.append("name_en", name_en.trim());
-      if (descripcion_es) formData.append("descripcion_es", descripcion_es.trim());
-      if (descripcion_en) formData.append("descripcion_en", descripcion_en.trim());
+      if (descripcion_es)
+        formData.append("descripcion_es", descripcion_es.trim());
+      if (descripcion_en)
+        formData.append("descripcion_en", descripcion_en.trim());
 
-      // Legacy (compatibilidad)
       if (name) formData.append("name", name.trim());
       if (descripcion) formData.append("descripcion", descripcion.trim());
 
-      formData.append("precio", precio || "0");
+      formData.append("precio", precio);
       formData.append("categoria", categoria);
+      formData.append("stock", "10");
+
       if (image) {
         formData.append("image", image);
       }
 
-      await productService.update(product._id as string, formData, user?.email);
+      await productService.update(product._id, formData, user?.email);
 
-      onUpdated(); // recargar lista
+      onUpdated();
       handleClose();
-    } catch (err: any) {
-      console.error("Error updating product:", err?.response?.data || err);
-      setError(
-        t("productModal.errorUpdate") ||
-          "Error al actualizar el producto. Revisa los campos."
-      );
+    } catch (err) {
+      console.error("Error updating product:", err);
+      setError(t("dashboard.error") || "Error al actualizar el producto");
     } finally {
       setLoading(false);
     }
@@ -128,7 +118,7 @@ export default function EditProductModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{t("productModal.editTitle") || "Editar producto"}</DialogTitle>
+      <DialogTitle>{t("dashboard.editProduct")}</DialogTitle>
       <DialogContent>
         <Box
           component="form"
@@ -171,16 +161,19 @@ export default function EditProductModal({
             rows={3}
           />
 
-          <Typography variant="caption" sx={{ color: "gray", mt: -1 }}>
+          <Typography
+            variant="caption"
+            sx={{ color: "gray", mt: -1 }}
+          >
             {t("productModal.legacyNote") ||
-              "Legacy fields (optional, for backward compatibility)"}
+              "Campos legacy (opcional, compatibilidad)"}
           </Typography>
+
           <TextField
             label={`${t("productModal.name")} (Legacy)`}
             value={name}
             onChange={(e) => setName(e.target.value)}
             fullWidth
-            helperText={t("productModal.optional")}
           />
           <TextField
             label={`${t("productModal.description")} (Legacy)`}
@@ -189,7 +182,6 @@ export default function EditProductModal({
             fullWidth
             multiline
             rows={2}
-            helperText={t("productModal.optional")}
           />
 
           <Box sx={{ display: "flex", gap: 2 }}>
@@ -224,7 +216,7 @@ export default function EditProductModal({
 
           <Box>
             <Typography variant="caption" display="block" gutterBottom>
-              {t("productModal.image")} ({t("productModal.optional")})
+              {t("productModal.image")}
             </Typography>
             <input
               type="file"
@@ -232,10 +224,6 @@ export default function EditProductModal({
               onChange={(e) => setImage(e.target.files?.[0] ?? null)}
               style={{ width: "100%" }}
             />
-            <Typography variant="caption" color="gray">
-              {t("productModal.keepImage") ||
-                "Si no seleccionas una nueva imagen, se mantiene la actual."}
-            </Typography>
           </Box>
 
           {error && (

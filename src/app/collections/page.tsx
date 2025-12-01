@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { Product } from "@/interfaces/interfaces";
-import AddProductModal from "@/components/modals/AddProductModal";
 import { productService } from "@/services/products";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCart } from "@/contexts/CartContext";
@@ -14,7 +13,6 @@ export default function CollectionPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [priceOrder, setPriceOrder] = useState("none");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { t, language } = useLanguage();
   const { addItem } = useCart();
 
@@ -42,7 +40,8 @@ export default function CollectionPage() {
     }
 
     if (category !== "all") {
-      list = list.filter((p) => p.categoria === category);
+      // Comparación case-insensitive para categorías
+      list = list.filter((p) => (p.categoria || "").toLowerCase() === category.toLowerCase());
     }
 
     if (priceOrder === "asc") {
@@ -53,7 +52,7 @@ export default function CollectionPage() {
     }
 
     return list;
-  }, [products, search, category, priceOrder]);
+  }, [products, search, category, priceOrder, language]);
 
   // Traducción de categorías según el código que viene de la DB
   const categoryLabel = (code: string) => {

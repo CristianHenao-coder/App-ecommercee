@@ -49,7 +49,7 @@ export default function NavMain() {
 
               {/* Dashboard solo para admin */}
               {isAdmin && (
-                <Link href="/dashboard">{t("nav.DashboardPage")}</Link>
+                <Link href="/dashboard">{t("nav.dashboard") || "Dashboard"}</Link>
               )}
 
               {/* Nombre del usuario / perfil */}

@@ -9,6 +9,7 @@ import * as yup from 'yup';
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCart } from "@/contexts/CartContext";
 import { getProductName, getProductDescription } from "@/helpers/productI18n";
+import Image from "next/image";
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -29,16 +30,13 @@ export default function HomePage() {
     setStatus(""); // Reset status
 
     try {
-      // ✅ 1. Validar en el FRONT con Yup (using registerSchema for now as per previous code, though likely should be contact schema)
-      // Ideally we should have a contactSchema. For now I'll skip strict validation or use what was there if appropriate.
-      // The previous code used registerSchema which checks name, email, password, etc. Contact form has name, email, message.
-      // I will just check basic fields manually or assume backend validation for now to avoid blocking.
+
       if (!form.name || !form.email || !form.message) {
         Notificaction(t("home.contactError"), "error");
         return;
       }
 
-      // ✅ 2. Si todo está bien, llamar al backend
+      //  2. Si todo está bien, llamar al backend
       await sendContact(form);
 
       setStatus(t("home.contactSuccess"));
@@ -54,16 +52,19 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* 🟩 SECCIÓN 1: PORTADA */}
+      {/*  SECCIÓN 1: PORTADA */}
       <section className="flex flex-col items-center justify-center text-center py-20">
         <h1 className="text-6xl font-extrabold tracking-tight mb-4">
           <span className="text-white">look</span>
           <span className="text-gray-200 ml-2">GOD</span>
         </h1>
         <p className="text-xl italic mb-6"> {t("home.heroSubtitle")} </p>
-        <img
-          src="/images/hero.jpg"
+       
+        <Image
+          src="/image/portada.png"
           alt="LookGod Hero"
+          width={1200}
+          height={800}
           className="w-full max-w-3xl rounded-xl shadow-lg border border-gray-800"
         />
         <div className="mt-6 flex flex-col sm:flex-row justify-center gap-6">
@@ -76,7 +77,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 🟨 SECCIÓN 2: PRODUCTOS */}
+      {/*  SECCIÓN 2: PRODUCTOS */}
       <section className="py-16 bg-white text-black text-center">
         <h2 className="text-4xl font-semibold mb-10">{t("home.productsTitle")}</h2>
         <p className="max-w-2xl mx-auto mb-12 text-gray-700 italic">
@@ -113,7 +114,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 🟦 SECCIÓN 3: CONTACTO */}
+      {/*  SECCIÓN 3: CONTACTO */}
       <section className="py-16 px-6 bg-black text-center border-t border-gray-800">
         <h2 className="text-3xl font-semibold mb-8">{t("home.contactTitle")}</h2>
         <form

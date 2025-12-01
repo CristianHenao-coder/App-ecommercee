@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       },
     });
 
-    //  3. Correo para ti (administrador)
+    //  3. Correo administrador
     const adminMail = {
       from: email,
       to: process.env.EMAIL_USER,
@@ -40,11 +40,11 @@ export async function POST(request: Request) {
     const userMail = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "Gracias por contactarte con LookGood 💚",
+      subject: "Gracias por contactarte con LookGood ",
       html: userConfirmationTemplate(name),
     };
 
-    // ✅ 5. Envía ambos correos
+    //  5. Envía ambos correos
     await transporter.sendMail(adminMail);
     await transporter.sendMail(userMail);
 
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("❌ Error en POST /api/contact:", error);
+    console.error(" Error en POST /api/contact:", error);
     return NextResponse.json(
       { success: false, message: "Error al enviar el correo." },
       { status: 500 }

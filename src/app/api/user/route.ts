@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     await dbConnection();
     const body = await request.json();
 
-    // ✅ Validación con Yup en el BACKEND
+    // Validación con Yup en el BACKEND
     const { name, email, password, phone, role } =
       await registerSchema.validate(body, { abortEarly: false });
 
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     // Send welcome email (non-blocking)
     sendEmail(
       newUser.email,
-      "¡Bienvenido a LookGod! 🎉",
+      "¡Bienvenido a LookGod! ",
       welcomeEmailTemplate(newUser.name)
     ).catch((error) => {
       console.error("Error sending welcome email (non-critical):", error);
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: firstError, // 👈 AQUÍ VA "Por favor ingresa un número de celular válido"
+          message: firstError, //  "Por favor ingresa un número de celular válido"
           errors: error.errors,
         },
         { status: 400 }
