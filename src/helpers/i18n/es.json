@@ -1,0 +1,183 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "collection": "Colección",
+    "login": "Login",
+    "register": "Registro",
+    "cart": "Carrito",
+    "dashboard": "Dashboard",
+    "profile": "Perfil",
+    "logout": "Cerrar sesión"
+  },
+  "home": {
+    "heroTitle": "lookGOD",
+    "heroSubtitle": "El Verbo hecho Style",
+    "heroText1": "Viste con poder ",
+    "heroText2": " Viste con propósito ",
+    "productsTitle": "Nuestras Camisetas",
+    "productsText": "Inspira con tu vestimenta. Calidad suprema, mensajes eternos. Adquiere una camiseta y lleva palabras de bendición contigo. Tú eres el mensaje vivo, refleja lo que eres.",
+    "contactTitle": "Contáctanos",
+    "contactNamePlaceholder": "Tu nombre",
+    "contactEmailPlaceholder": "Tu correo",
+    "contactMessagePlaceholder": "Escribe tu mensaje...",
+    "contactSendButton": "Enviar",
+    "contactSuccess": "¡Mensaje enviado con éxito!",
+    "contactError": "Error al enviar el mensaje."
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "subtitle": "Ingresa a tu cuenta",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Contraseña",
+    "submitButton": "Iniciar sesión",
+    "signingIn": "Iniciando sesión...",
+    "registerPrompt": "¿No tienes cuenta?",
+    "registerAction": "Regístrate",
+    "errors": {
+      "emailRequired": "El correo es obligatorio",
+      "emailInvalid": "El correo no es válido",
+      "passwordRequired": "La contraseña es obligatoria",
+      "loginError": "Error al iniciar sesión",
+      "invalidCredentials": "Credenciales incorrectas"
+    }
+  },
+  "register": {
+    "title": "Crear cuenta",
+    "subtitle": "Únete a la comunidad LookGod",
+    "namePlaceholder": "Nombre completo",
+    "emailPlaceholder": "Correo electrónico",
+    "passwordPlaceholder": "Contraseña",
+    "phonePlaceholder": "Teléfono",
+    "submitButton": "Registrarme",
+    "divider": "o",
+    "googleButton": "Ingresar con Google",
+    "loginPrompt": "¿Ya tienes cuenta?",
+    "loginAction": "Inicia sesión",
+    "success": "Registro exitoso, redirigiendo al login...",
+    "errors": {
+      "default": "Error al registrarse. Intenta de nuevo.",
+      "validation": "Por favor corrige los campos marcados"
+    }
+  },
+  "collection": {
+    "title": "Colección de Productos",
+    "searchPlaceholder": "Buscar producto...",
+    "allCategories": "Todas",
+    "orderByPrice": "Ordenar por precio",
+    "priceAsc": "Menor precio",
+    "priceDesc": "Mayor precio",
+    "addButton": "Agregar producto",
+    "noProducts": "No se encontraron productos.",
+    "categories": {
+      "tshirts": "Camisetas",
+      "hoodies": "Hoodies",
+      "accessories": "Accesorios"
+    }
+  },
+  "productModal": {
+    "title": "Agregar Producto",
+    "name": "Nombre del producto",
+    "description": "Descripción",
+    "price": "Precio",
+    "stock": "Stock",
+    "category": "Categoría",
+    "storeOptional": "ID de tienda (opcional)",
+    "createdByOptional": "Creado por (opcional)",
+    "image": "Imagen",
+    "optional": "Opcional",
+    "legacyNote": "Campos legacy (opcional, para compatibilidad)",
+    "createButton": "Crear producto",
+    "cancelButton": "Cancelar",
+    "saving": "Guardando...",
+    "success": "Producto creado correctamente",
+    "error": "Error al crear el producto",
+    "formErrorRequired": "Por favor completa los campos obligatorios"
+  },
+  "cart": {
+    "title": "Carrito de compras",
+    "product": "Producto",
+    "price": "Precio",
+    "quantity": "Cantidad",
+    "total": "Total",
+    "actions": "Acciones",
+    "subtotal": "Subtotal",
+    "checkout": "Pagar",
+    "proceedToCheckout": "Proceder al pago",
+    "empty": "Tu carrito está vacío.",
+    "add": "Añadir al carrito",
+    "added": "Añadido al carrito",
+    "removed": "Producto eliminado del carrito",
+    "clearCart": "Vaciar carrito",
+    "loginRequired": "Por favor inicia sesión para ver tu carrito",
+    "summary": "Resumen del pedido"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "avatar": "Avatar",
+    "save": "Guardar Cambios",
+    "uploadAvatar": "Subir Avatar",
+    "saved": "Perfil guardado correctamente",
+    "error": "Error al guardar el perfil",
+    "loading": "Cargando...",
+    "uploading": "Subiendo...",
+    "avatarUpdated": "Avatar actualizado correctamente",
+    "avatarError": "Error al subir el avatar"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "addProduct": "Agregar Producto",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "confirmDelete": "¿Estás seguro de eliminar este producto?",
+    "deleted": "Producto eliminado",
+    "error": "Error",
+    "image": "Imagen",
+    "name": "Nombre",
+    "category": "Categoría",
+    "price": "Precio",
+    "actions": "Acciones",
+    "noProducts": "No se encontraron productos.",
+    "loading": "Cargando..."
+  },
+  "checkout": {
+    "title": "Finalizar compra",
+    "summary": "Resumen del pedido",
+    "paymentMethod": "Método de pago",
+    "comingSoon": "Próximamente",
+    "comingSoonText": "Muy pronto podrás completar tu compra desde aquí.",
+    "gotIt": "Entendido",
+    "processing": "Procesando pago...",
+    "success": "¡Pago completado con éxito!",
+    "error": "Error al procesar el pago"
+  },
+  "product": {
+    "addToCart": "Añadir al carrito",
+    "description": "Descripción",
+    "specs": "Especificaciones técnicas",
+    "brand": "Marca",
+    "model": "Modelo",
+    "year": "Año",
+    "engine": "Cilindrada",
+    "price": "Precio",
+    "category": "Categoría",
+    "notFound": "Producto no encontrado"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
+  },
+  "footer": {
+    "motto": "Somos uno – Look God",
+    "vision": "Y llevará el evangelio a toda nación",
+    "copyright": "Cristian Henao - coder © 2025",
+    "blessing": "Dios te bendiga",
+    "quickLinks": "Enlaces rápidos",
+    "followUs": "Síguenos"
+  }
+}
