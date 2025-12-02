@@ -6,7 +6,7 @@ export const userConfirmationTemplate = (name: string) => `
       Hemos recibido tu mensaje y nuestro equipo se comunicará contigo pronto.
     </p>
     <p style="margin-top: 10px;">
-      <em>Gracias por tu paciencia 💚</em><br />
+      <em>Gracias por tu paciencia </em><br />
       <strong>Equipo LookGood</strong>
     </p>
   </div>
@@ -14,7 +14,7 @@ export const userConfirmationTemplate = (name: string) => `
 
 export const welcomeEmailTemplate = (name: string) => `
   <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
-    <h2 style="color: #2563eb;">¡Bienvenido a LookGod, ${name}! 🎉</h2>
+    <h2 style="color: #2563eb;">¡Bienvenido a LookGod, ${name}! </h2>
     <p>
       Gracias por unirte a nuestra comunidad. Estamos emocionados de tenerte con nosotros.
     </p>
@@ -31,14 +31,14 @@ export const welcomeEmailTemplate = (name: string) => `
     </p>
     <p style="margin-top: 20px;">
       <em>Con amor,</em><br />
-      <strong>El equipo de LookGod 💚</strong>
+      <strong>El equipo de LookGod </strong>
     </p>
   </div>
 `;
 
 export const dailyPromoEmailTemplate = (name: string) => `
   <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
-    <h2 style="color: #2563eb;">¡Hola ${name}! 🏍️</h2>
+    <h2 style="color: #2563eb;">¡Hola ${name}! </h2>
     <p>
       No te pierdas nuestras ofertas especiales de hoy:
     </p>

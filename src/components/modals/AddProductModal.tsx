@@ -90,8 +90,8 @@ export default function AddProductModal({
 
       await productService.create(formData, user?.email);
 
-      // ✅ producto creado correctamente
-      onCreated(); // refrescar lista en la página padre
+      //  Product created successfully
+      onCreated(); // Refresh list in parent page
       handleClose();
     } catch (err: any) {
       setError(t("productModal.error"));

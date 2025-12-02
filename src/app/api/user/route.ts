@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     await dbConnection();
     const body = await request.json();
 
-    // Validación con Yup en el BACKEND
+    // Validate with Yup on BACKEND
     const { name, email, password, phone, role } =
       await registerSchema.validate(body, { abortEarly: false });
 
@@ -63,13 +63,13 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    //  Si falla Yup, devolvemos directamente el mensaje de validación
+    // If Yup fails, return validation message directly
     if (error instanceof yup.ValidationError) {
-      const firstError = error.errors[0] ?? "Datos inválidos";
+      const firstError = error.errors[0] ?? "Invalid data";
       return NextResponse.json(
         {
           success: false,
-          message: firstError, //  "Por favor ingresa un número de celular válido"
+          message: firstError, // "Please enter a valid phone number"
           errors: error.errors,
         },
         { status: 400 }

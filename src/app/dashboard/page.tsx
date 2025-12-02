@@ -202,7 +202,7 @@ export default function DashboardPage() {
                     {getProductName(product)}
                   </TableCell>
 
-                  {/* Categoría */}
+                  {/* Category */}
                   <TableCell sx={{ color: "white" }}>
                     {product.categoria}
                   </TableCell>
@@ -238,14 +238,14 @@ export default function DashboardPage() {
         </Table>
       </TableContainer>
 
-      {/* Modal crear */}
+      {/* Create Modal */}
       <AddProductModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onCreated={fetchProducts}
       />
 
-      {/* Modal editar */}
+      {/* Edit Modal */}
       {editingProduct && (
         <EditProductModal
           open={isEditModalOpen}

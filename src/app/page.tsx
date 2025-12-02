@@ -36,7 +36,7 @@ export default function HomePage() {
         return;
       }
 
-      //  2. Si todo está bien, llamar al backend
+      //  2. If everything is OK, call backend
       await sendContact(form);
 
       setStatus(t("home.contactSuccess"));
@@ -52,32 +52,57 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/*  SECCIÓN 1: PORTADA */}
-      <section className="flex flex-col items-center justify-center text-center py-20">
-        <h1 className="text-6xl font-extrabold tracking-tight mb-4">
-          <span className="text-white">look</span>
-          <span className="text-gray-200 ml-2">GOD</span>
-        </h1>
-        <p className="text-xl italic mb-6"> {t("home.heroSubtitle")} </p>
-       
+
+    {/*  SECTION 1: HERO */}
+    <section className="relative flex flex-col items-center justify-center text-center py-20 overflow-hidden">
+      {/* H1 solo para SEO, no se ve */}
+      <h1 className="sr-only">
+        look GOD - {t("home.heroSubtitle")}
+      </h1>
+
+      {/* Texto gigante de fondo: look / GOD */}
+      <div className="pointer-events-none select-none absolute inset-0 flex items-center justify-between px-4 md:px-16">
+        <h2
+          aria-hidden="true"
+          className="text-[24vw] md:text-[11vw] font-extrabold leading-none tracking-tight text-white/60"
+        >
+          look
+        </h2>
+        <h2
+          aria-hidden="true"
+          className="text-[24vw] md:text-[11vw] font-extrabold leading-none tracking-tight text-white/70"
+        >
+          GOD
+        </h2>
+      </div>
+
+      {/* Subtítulo encima, centrado */}
+      <p className="text-xl italic mb-6 relative z-20">
+        {t("home.heroSubtitle")}
+      </p>
+
+      {/* Imagen al frente */}
+      <div className="relative z-20 w-full max-w-3xl">
         <Image
           src="/image/portada.png"
           alt="LookGod Hero"
           width={1200}
           height={800}
-          className="w-full max-w-3xl rounded-xl shadow-lg border border-gray-800"
+          className="w-full rounded-xl shadow-lg border border-gray-800"
         />
-        <div className="mt-6 flex flex-col sm:flex-row justify-center gap-6">
-          <p className="text-sm uppercase tracking-widest">
-            {t("home.heroText1")}
-          </p>
-          <p className="text-sm uppercase tracking-widest">
-            {t("home.heroText2")}
-          </p>
-        </div>
-      </section>
+      </div>
 
-      {/*  SECCIÓN 2: PRODUCTOS */}
+      {/* Textos de abajo */}
+      <div className="mt-6 flex flex-col sm:flex-row justify-center gap-130 relative z-20">
+        <p className="text-sm uppercase tracking-widest">
+          {t("home.heroText1")}
+        </p>
+        <p className="text-sm uppercase tracking-widest">
+          {t("home.heroText2")}
+        </p>
+      </div>
+    </section>
+      {/*  SECTION 2: PRODUCTS */}
       <section className="py-16 bg-white text-black text-center">
         <h2 className="text-4xl font-semibold mb-10">{t("home.productsTitle")}</h2>
         <p className="max-w-2xl mx-auto mb-12 text-gray-700 italic">
@@ -114,7 +139,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/*  SECCIÓN 3: CONTACTO */}
+      {/*  SECTION 3: CONTACT */}
       <section className="py-16 px-6 bg-black text-center border-t border-gray-800">
         <h2 className="text-3xl font-semibold mb-8">{t("home.contactTitle")}</h2>
         <form

@@ -12,11 +12,11 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    // Validación con Yup
+    // Validate with Yup
     const validatedData = await loginSchema.validate(body, { abortEarly: false });
     const { email, password } = validatedData;
 
-    // Buscar usuario
+    // Find user
     const user = await User.findOne({ email }).lean<IUser>();
 
     if (!user) {
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Comparar contraseña
+    // Compare password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return NextResponse.json(
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Ocultar contraseña antes de responder
+    // Hide password before responding
     const { password: _password, ...userSafe } = user;
 
     return NextResponse.json(

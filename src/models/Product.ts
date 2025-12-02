@@ -13,7 +13,7 @@ const productSchema = new Schema(
     precio: { type: Number },
     categoria: {
       type: String,
-      set: (value: string) => value?.toLowerCase() || value, // Normalizar a minúsculas automáticamente
+      set: (value: string) => value?.toLowerCase() || value, // Automatically normalize to lowercase
     },
     image: { type: String },
     stock: { type: Number, default: 0 },

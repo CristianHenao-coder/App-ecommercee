@@ -1,6 +1,7 @@
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import NavMain from "@/components/navMain/navMain";
+import Footer from "@/components/layout/Footer";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
@@ -17,12 +18,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className="bg-gray-50 text-gray-900">
+      <body className="bg-gray-50 text-gray-900 flex flex-col min-h-screen">
         <AuthProvider>
           <LanguageProvider>
             <CartProvider>
               <NavMain />
-              {children}
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
               <ToastContainer />
             </CartProvider>
           </LanguageProvider>

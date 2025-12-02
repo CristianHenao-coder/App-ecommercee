@@ -12,8 +12,8 @@
   "home": {
     "heroTitle": "lookGOD",
     "heroSubtitle": "El Verbo hecho Style",
-    "heroText1": "Viste con poder ✨",
-    "heroText2": "Viste con propósito 🙌",
+    "heroText1": "Viste con poder ",
+    "heroText2": " Viste con propósito ",
     "productsTitle": "Nuestras Camisetas",
     "productsText": "Inspira con tu vestimenta. Calidad suprema, mensajes eternos. Adquiere una camiseta y lleva palabras de bendición contigo. Tú eres el mensaje vivo, refleja lo que eres.",
     "contactTitle": "Contáctanos",
@@ -171,5 +171,13 @@
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito"
+  },
+  "footer": {
+    "motto": "Somos uno – Look God",
+    "vision": "Y llevará el evangelio a toda nación",
+    "copyright": "Cristian Henao - coder © 2025",
+    "blessing": "Dios te bendiga",
+    "quickLinks": "Enlaces rápidos",
+    "followUs": "Síguenos"
   }
 }

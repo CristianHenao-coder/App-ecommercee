@@ -40,9 +40,9 @@ export default function LoginPage() {
       const data = await authService.login(form);
 
       const user = data.user;
-      login(user); // guardamos en contexto + localStorage
+      login(user); 
 
-      // Si es admin lleva al dashboard, si no al inicio
+   
       if (user.role === "admin") {
         router.push("/dashboard");
       } else {

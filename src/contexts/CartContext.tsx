@@ -63,10 +63,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 try {
                     const dbCart = await cartService.getCart(user.email);
                     if (dbCart && dbCart.length > 0) {
-                        // If DB has cart items, we need to fetch full product data
-                        // For now, we'll merge: if DB has items, use DB; otherwise keep local
-                        // In a full implementation, we'd fetch products by IDs and merge properly
-                        // For simplicity, we'll keep local cart and sync it to DB
+                        
                     }
                 } catch (error) {
                     console.error("Error fetching cart from DB:", error);

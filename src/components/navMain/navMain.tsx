@@ -17,10 +17,10 @@ export default function NavMain() {
     <header className="w-full border-b border-gray-200 bg-white">
       <nav className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
         {/* Logo / nombre de la marca */}
-        <div className="font-bold text-lg">Ecommerce</div>
+        <div className="font-bold text-lg">Look_God</div>
 
         <div className="flex items-center gap-6 text-sm">
-          {/* Rutas públicas (todos las ven) */}
+          {/* Public routes (visible to all) */}
           <Link href="/">{t("nav.home")}</Link>
           <Link href="/collections">{t("nav.collection")}</Link>
 

@@ -18,10 +18,10 @@ export const registerSchema = yup.object({
     .optional()
     .test(
       "is-valid-phone",
-      "Por favor ingresa un número de celular válido", // 👈 ESTE ES EL TEXTO QUE QUIERES
+      "Por favor ingresa un número de celular válido", // 
       (value) => {
         if (!value) return true;    // opcional
-        return /^\d+$/.test(value); // solo números
+        return /^\d+$/.test(value); // numbers only
       }
     ),
   role: yup.string().optional(),

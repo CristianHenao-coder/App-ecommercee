@@ -12,8 +12,8 @@
   "home": {
     "heroTitle": "lookGOD",
     "heroSubtitle": "The Word made Style",
-    "heroText1": "Dress with power ✨",
-    "heroText2": "Dress with purpose 🙌",
+    "heroText1": "Dress with power ",
+    "heroText2": "Dress with purpose ",
     "productsTitle": "Our T-Shirts",
     "productsText": "Inspire with your attire. Supreme quality, eternal messages. Acquire a t-shirt and carry words of blessing with you. You are the living message, reflect who you are.",
     "contactTitle": "Contact Us",
@@ -171,5 +171,13 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success"
+  },
+  "footer": {
+    "motto": "We are one – Look God",
+    "vision": "And he will carry the Gospel to every nation",
+    "copyright": "Cristian Henao - coder © 2025",
+    "blessing": "God bless you",
+    "quickLinks": "Quick Links",
+    "followUs": "Follow Us"
   }
 }

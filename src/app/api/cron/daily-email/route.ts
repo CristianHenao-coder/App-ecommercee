@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 
             const result = await sendEmail(
                 user.email,
-                "Ofertas Especiales de LookGod 🏍️",
+                "Ofertas Especiales de LookGod ",
                 dailyPromoEmailTemplate(user.name || "Cliente")
             );
 

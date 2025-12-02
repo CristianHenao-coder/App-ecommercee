@@ -13,10 +13,7 @@ export function createEmailTransporter() {
   });
 }
 
-/**
- * Send an email using nodemailer
- * Logs errors but doesn't throw to avoid breaking the main flow
- */
+
 export async function sendEmail(
   to: string,
   subject: string,

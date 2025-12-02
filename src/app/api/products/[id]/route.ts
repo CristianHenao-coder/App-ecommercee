@@ -8,7 +8,7 @@ import { productSchema } from "@/schema/product.schema";
 
 export const runtime = "nodejs";
 
-// PUT /api/products/:id  (actualizar producto)
+// PUT /api/products/:id (update product)
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> | { id: string } }
@@ -34,12 +34,12 @@ export async function PUT(
     let updateData: Record<string, unknown> = {};
 
     if (contentType.includes("application/json")) {
-      // modo JSON
+      // JSON mode
       const body = await request.json();
       await productSchema.validate(body, { abortEarly: false });
       updateData = body;
     } else {
-      // modo multipart/form-data (desde EditProductModal)
+      // multipart/form-data mode (from EditProductModal)
       const formData = await request.formData();
 
       const name_es = formData.get("name_es") as string | null;
@@ -50,7 +50,7 @@ export async function PUT(
       const name = formData.get("name") as string | null;
       const descripcion = formData.get("descripcion") as string | null;
       const precio = Number(formData.get("precio"));
-      // Normalizar categoría a minúsculas
+      // Normalize category to lowercase
       const categoria = ((formData.get("categoria") as string) || "").toLowerCase();
       const stock = formData.get("stock")
         ? Number(formData.get("stock"))
@@ -123,26 +123,26 @@ export async function PUT(
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
     if (error instanceof yup.ValidationError) {
-      console.error("Errores de validación producto:", error.errors);
+      console.error("Product validation errors:", error.errors);
       return NextResponse.json(
         {
           success: false,
-          message: "Errores de validación",
+          message: "Validation errors",
           errors: error.errors,
         },
         { status: 400 }
       );
     }
 
-    console.error("Error al actualizar producto:", error);
+    console.error("Error updating product:", error);
     return NextResponse.json(
-      { success: false, message: "Error al actualizar el producto" },
+      { success: false, message: "Error updating product" },
       { status: 500 }
     );
   }
 }
 
-// DELETE /api/products/:id  (eliminar producto)
+// DELETE /api/products/:id (delete product)
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> | { id: string } }
@@ -178,9 +178,9 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error al eliminar producto:", error);
+    console.error("Error deleting product:", error);
     return NextResponse.json(
-      { success: false, message: "Error al eliminar el producto" },
+      { success: false, message: "Error deleting product" },
       { status: 500 }
     );
   }

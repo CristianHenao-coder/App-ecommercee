@@ -40,7 +40,7 @@ export default function CollectionPage() {
     }
 
     if (category !== "all") {
-      // Comparación case-insensitive para categorías
+      // Case-insensitive comparison for categories
       list = list.filter((p) => (p.categoria || "").toLowerCase() === category.toLowerCase());
     }
 
@@ -54,7 +54,7 @@ export default function CollectionPage() {
     return list;
   }, [products, search, category, priceOrder, language]);
 
-  // Traducción de categorías según el código que viene de la DB
+  // Translate categories based on code from database
   const categoryLabel = (code: string) => {
     switch (code) {
       case "camisetas":
@@ -74,7 +74,7 @@ export default function CollectionPage() {
         {t("collection.title")}
       </h1>
 
-      {/* FILTROS + BOTÓN */}
+      {/* FILTERS */}
       <div className="flex flex-col md:flex-row gap-6 mb-12 justify-center items-center">
         <input
           type="text"
@@ -114,7 +114,7 @@ export default function CollectionPage() {
 
       </div>
 
-      {/* LISTA DE PRODUCTOS */}
+      {/* PRODUCT LIST */}
       {filtered.length === 0 ? (
         <p className="text-center text-gray-400 text-lg">
           {t("collection.noProducts")}

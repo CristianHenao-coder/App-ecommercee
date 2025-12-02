@@ -6,7 +6,7 @@ import cloudinary from "@/lib/cloudinary";
 import * as yup from "yup";
 import { productSchema } from "@/schema/product.schema";
 
-export const runtime = "nodejs"; // obligamos entorno Node para Buffer/Cloudinary
+export const runtime = "nodejs"; // Force Node.js environment for Buffer/Cloudinary
 
 // GET /api/products
 export async function GET() {
@@ -15,15 +15,15 @@ export async function GET() {
     const products = await Product.find().lean();
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
-    console.error("Error al obtener productos:", error);
+    console.error("Error fetching products:", error);
     return NextResponse.json(
-      { success: false, message: "Error al cargar productos" },
+      { success: false, message: "Error loading products" },
       { status: 500 }
     );
   }
 }
 
-// POST /api/products  (crear producto) - SOLO ADMIN
+// POST /api/products (create product) - ADMIN ONLY
 export async function POST(request: Request) {
   try {
     const { requireAdmin } = await import("@/helpers/auth");
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
     const contentType = request.headers.get("content-type") || "";
 
-    // MODO 1: JSON puro (compatibilidad antigua)
+    // MODE 1: Pure JSON (legacy compatibility)
     if (contentType.includes("application/json")) {
       const body = await request.json(); // { name, descripcion, precio, categoria, image, ... }
 
@@ -50,20 +50,20 @@ export async function POST(request: Request) {
       return NextResponse.json(newProduct, { status: 201 });
     }
 
-    // MODO 2: multipart/form-data (para subir imagen desde el Dashboard)
+    // MODE 2: multipart/form-data (for image upload from Dashboard)
     const formData = await request.formData();
 
-    // Campos multi-idioma
+    // Multilingual fields
     const name_es = formData.get("name_es") as string | null;
     const name_en = formData.get("name_en") as string | null;
     const descripcion_es = formData.get("descripcion_es") as string | null;
     const descripcion_en = formData.get("descripcion_en") as string | null;
 
-    // Campos legacy (por compatibilidad)
+    // Legacy fields (for backward compatibility)
     const name = formData.get("name") as string | null;
     const descripcion = formData.get("descripcion") as string | null;
     const precio = Number(formData.get("precio"));
-    // Normalizar categoría a minúsculas para consistencia
+    // Normalize category to lowercase for consistency
     const categoria = ((formData.get("categoria") as string) || "").toLowerCase();
     const stock = formData.get("stock")
       ? Number(formData.get("stock"))
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     const finalName = name_es || name || "";
     const finalDescripcion = descripcion_es || descripcion || "";
 
-    // Validar con Yup
+    // Validate with Yup
     await productSchema.validate(
       {
         name: finalName,
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
     }
 
     const newProduct = await Product.create({
-      // multi-idioma
+      // multilingual
       name_es: name_es || undefined,
       name_en: name_en || undefined,
       descripcion_es: descripcion_es || undefined,
@@ -118,27 +118,27 @@ export async function POST(request: Request) {
       precio,
       categoria,
       stock,
-      // createdBy se puede ignorar si da problemas de ObjectId
+      // createdBy can be ignored if ObjectId causes issues
       image: imageUrl,
     });
 
     return NextResponse.json(newProduct, { status: 201 });
   } catch (error) {
     if (error instanceof yup.ValidationError) {
-      console.error("Errores de validación producto:", error.errors);
+      console.error("Product validation errors:", error.errors);
       return NextResponse.json(
         {
           success: false,
-          message: "Errores de validación",
+          message: "Validation errors",
           errors: error.errors,
         },
         { status: 400 }
       );
     }
 
-    console.error("Error al crear producto:", error);
+    console.error("Error creating product:", error);
     return NextResponse.json(
-      { success: false, message: "Error al crear el producto" },
+      { success: false, message: "Error creating product" },
       { status: 500 }
     );
   }

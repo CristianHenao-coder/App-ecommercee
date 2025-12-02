@@ -35,12 +35,12 @@ export default function RegisterPage() {
     try {
       console.log("VALIDANDO FORM >>>", form);
 
-      //  1. Validación con Yup
+      //  1. Validate with Yup
       await registerSchema.validate(form, { abortEarly: false });
 
-      console.log("VALIDACIÓN OK, ENVIANDO A /api/user");
+      console.log("VALIDATION OK, SENDING TO /api/user");
 
-      //  2. Si todo bien, mandamos al backend
+      //  2. If everything is OK, send to backend
       await authService.register(form);
 
       Notificaction(t("register.success"), "success");
@@ -52,14 +52,14 @@ export default function RegisterPage() {
       console.log("ERROR EN REGISTER >>>", err);
 
       if (err instanceof yup.ValidationError) {
-        // errores del FRONT (por si no dejas enviar aún)
+        // Frontend errors (in case form submission is blocked)
         const msgs = err.errors as string[];
         setErrors(msgs);
         Notificaction(t("register.errors.validation"), "error");
         return;
       }
 
-      // Errores del backend (/api/user)
+      // Backend errors (/api/user)
       const msg =
         err?.response?.data?.message ||
         t("register.errors.default");
@@ -79,7 +79,7 @@ export default function RegisterPage() {
           {t("register.title")}
         </h2>
 
-        {/* noValidate desactiva la validación del navegador */}
+        {/* noValidate disables browser validation */}
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <input
             name="name"
@@ -127,14 +127,14 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        {/* Línea divisora */}
+        {/* Divider line */}
         <div className="flex items-center my-6">
           <hr className="flex-grow border-gray-600" />
           <span className="px-2 text-gray-400 text-sm">{t("register.divider")}</span>
           <hr className="flex-grow border-gray-600" />
         </div>
 
-        {/*  Botón de Google */}
+        {/*  Google button */}
         <Button
           type="button"
           variant="outline"

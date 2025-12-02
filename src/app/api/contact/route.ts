@@ -16,10 +16,10 @@ export async function POST(request: Request) {
       );
     }
 
-    //  1. Guarda el mensaje en MongoDB
+    //  1. Save message to MongoDB
     await Contact.create({ name, email, message });
 
-    //  2. Configura transporte de correo
+    //  2. Configure email transport
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       },
     });
 
-    //  3. Correo administrador
+    //  3. Admin email
     const adminMail = {
       from: email,
       to: process.env.EMAIL_USER,
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       text: `Nombre: ${name}\nCorreo: ${email}\nMensaje: ${message}`,
     };
 
-    //  4. Correo automático al usuario
+    //  4. Automatic email to user
     const userMail = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       html: userConfirmationTemplate(name),
     };
 
-    //  5. Envía ambos correos
+    //  5. Send both emails
     await transporter.sendMail(adminMail);
     await transporter.sendMail(userMail);
 

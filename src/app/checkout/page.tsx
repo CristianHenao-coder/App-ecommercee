@@ -65,13 +65,17 @@ export default function CheckoutPage() {
         );
     }
 
-    const createOrder = async () => {
+    const createOrder = async (): Promise<string> => {
         try {
             const order = await paymentService.createOrder(items);
+            if (!order || !order.id) {
+                throw new Error("Invalid order response from server");
+            }
             return order.id;
-        } catch (error) {
+        } catch (error: unknown) {
             console.error("Error creating order:", error);
-            Notificaction(t("checkout.error"), "error");
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+            Notificaction(t("checkout.error") + ": " + errorMessage, "error");
             throw error;
         }
     };
@@ -146,11 +150,22 @@ export default function CheckoutPage() {
                     {/* Payment */}
                     <div className="bg-white p-6 rounded-2xl text-black">
                         <h2 className="text-2xl font-bold mb-6">{t("checkout.paymentMethod")}</h2>
-                        <PayPalScriptProvider options={{ clientId: paypalClientId }}>
+                        <PayPalScriptProvider 
+                            options={{ 
+                                clientId: paypalClientId,
+                                currency: "USD",
+                            }}
+                        >
                             <PayPalButtons
                                 createOrder={createOrder}
                                 onApprove={onApprove}
-                                onError={() => Notificaction(t("checkout.error"), "error")}
+                                onError={(err) => {
+                                    console.error("PayPal error:", err);
+                                    Notificaction(t("checkout.error") + ": " + (err.message || "Unknown error"), "error");
+                                }}
+                                onCancel={() => {
+                                    Notificaction("Payment cancelled", "info");
+                                }}
                             />
                         </PayPalScriptProvider>
                     </div>
