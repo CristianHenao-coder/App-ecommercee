@@ -7,34 +7,48 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-black text-white border-t border-gray-800 mt-auto">
+    <footer className="bg-black text-white border-t border-white/10 mt-auto">
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Main Content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand Section */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Look God</h3>
-            <p className="text-gray-400 text-sm mb-4">{t("footer.motto")}</p>
-            <p className="text-gray-500 text-xs">{t("footer.vision")}</p>
+            <h3 className="text-xl font-bold mb-4">
+              <span className="text-white/70">look</span>
+              <span className="text-white">GOD</span>
+            </h3>
+            <p className="text-gray-400 text-sm mb-4">
+              {t("footer.motto") || "Viste tu fe. Refleja tu esencia."}
+            </p>
+            <p className="text-gray-500 text-xs">
+              {t("footer.vision") || "Moda oversize con propósito para quienes viven su fe."}
+            </p>
           </div>
 
           {/* Links Section */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">{t("footer.quickLinks")}</h4>
+            <h4 className="text-lg font-semibold mb-4">
+              {t("footer.quickLinks") || "Enlaces Rápidos"}
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/" className="text-gray-400 hover:text-white transition-colors">
-                  {t("nav.home")}
+                  {t("nav.home") || "Inicio"}
                 </Link>
               </li>
               <li>
                 <Link href="/collections" className="text-gray-400 hover:text-white transition-colors">
-                  {t("nav.collection")}
+                  {t("nav.collection") || "Colección"}
                 </Link>
               </li>
               <li>
                 <Link href="/cart" className="text-gray-400 hover:text-white transition-colors">
-                  {t("nav.cart")}
+                  {t("nav.cart") || "Carrito"}
+                </Link>
+              </li>
+              <li>
+                <Link href="/orders" className="text-gray-400 hover:text-white transition-colors">
+                  Mis Pedidos
                 </Link>
               </li>
             </ul>
@@ -42,7 +56,9 @@ export default function Footer() {
 
           {/* Social Section */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">{t("footer.followUs")}</h4>
+            <h4 className="text-lg font-semibold mb-4">
+              {t("footer.followUs") || "Síguenos"}
+            </h4>
             <div className="flex gap-4">
               <a
                 href="https://github.com/CristianHenao-coder"
@@ -81,13 +97,13 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-800 pt-8">
+        <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-400 text-center md:text-left">
-              {t("footer.copyright")}
+              {t("footer.copyright") || "© 2026 LookGod. Todos los derechos reservados."}
             </p>
             <p className="text-sm text-gray-500 text-center md:text-right">
-              {t("footer.blessing")}
+              {t("footer.blessing") || "Medellín, Colombia"}
             </p>
           </div>
         </div>
@@ -95,4 +111,3 @@ export default function Footer() {
     </footer>
   );
 }
-

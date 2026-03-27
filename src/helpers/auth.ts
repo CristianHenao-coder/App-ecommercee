@@ -1,10 +1,14 @@
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 
+interface UserRole {
+    role?: string;
+}
+
 export async function checkAdmin(email: string): Promise<boolean> {
     try {
         await dbConnect();
-        const user = await User.findOne({ email }).select("role").lean();
+        const user = await User.findOne({ email }).select("role").lean<UserRole>();
         return user?.role === "admin";
     } catch (error) {
         console.error("Error checking admin:", error);

@@ -24,6 +24,7 @@
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.8.0",
     "dotenv": "^17.2.3",
+    "framer-motion": "^12.38.0",
     "mongoose": "^8.19.2",
     "next": "^16.0.5",
     "next-auth": "^4.24.13",
@@ -31,7 +32,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.66.0",
-    "Sy": "^11.0.5",
+    "react-toastify": "^10.0.6",
     "yup": "^1.7.1"
   },
   "devDependencies": {

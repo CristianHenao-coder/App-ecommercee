@@ -29,7 +29,7 @@ export default function ProfilePage() {
                 name: user.name || "",
                 email: user.email || "",
                 phone: user.phone?.toString() || "",
-                avatarUrl: user.avatarUrl || user.avatar || "",
+                avatarUrl: user.avatarUrl || "",
             });
         }
     }, [user, loading, router]);

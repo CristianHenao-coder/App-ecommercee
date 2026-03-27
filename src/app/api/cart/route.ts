@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 
+interface UserCart {
+    cart?: Array<{ productId: string; quantity: number }>;
+}
+
 export async function GET(request: Request) {
     try {
         await dbConnect();
@@ -12,7 +16,7 @@ export async function GET(request: Request) {
             return NextResponse.json({ message: "Email required" }, { status: 400 });
         }
 
-        const user = await User.findOne({ email }).select("cart").lean();
+        const user = await User.findOne({ email }).select("cart").lean<UserCart>();
 
         if (!user) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });

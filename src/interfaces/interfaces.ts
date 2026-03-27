@@ -11,17 +11,22 @@ export interface Product {
   descripcion_en?: string;
   precio: number;
   categoria: string;
+  stock?: number;
   tiendaId?: string;
   createdAt?: string;
 }
 
+export interface CartItem extends Product {
+  quantity: number;
+  size?: string;
+  cartKey?: string; // unique key: _id + size
+}
 
 export interface ContactForm {
   name: string;
   email: string;
   message: string;
 }
-
 
 export interface IUser {
   _id: string;
@@ -32,4 +37,44 @@ export interface IUser {
   phone?: string;
   role: string;
   tiendaId?: string | null;
+}
+
+export interface IOrderItem {
+  product: string | Product;
+  quantity: number;
+  price: number;
+  size?: string;
+}
+
+export interface IOrder {
+  _id?: string;
+  user: string | IUser;
+  items: IOrderItem[];
+  total: number;
+  subtotal: number;
+  shipping: number;
+  discount: number;
+  couponCode?: string;
+  status: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
+  shippingAddress?: {
+    fullName: string;
+    phone: string;
+    address: string;
+    city: string;
+    notes?: string;
+  };
+  paymentMethod?: string;
+  paymentId?: string;
+  paymentStatus?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ICupon {
+  _id?: string;
+  codigo: string;
+  descuento: number; // percentage 1-100
+  fechaExpiracion: string;
+  activo: boolean;
+  createdAt?: string;
 }

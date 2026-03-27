@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { useSession, signOut } from "next-auth/react";
 
-export type Role = "admin" | "client";
+export type Role = "admin" | "client" | "cliente";
 
 export interface AuthUser {
   _id: string;
@@ -17,7 +12,6 @@ export interface AuthUser {
   role: Role;
   phone?: string;
   avatarUrl?: string;
-  avatar?: string; // Keep for backward compatibility if needed
 }
 
 interface AuthContextType {
@@ -36,22 +30,49 @@ const STORAGE_KEY = "authUser";
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
 
-  // Leer usuario de localStorage al montar
+  // Sincronizar con localStorage y NextAuth
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        const parsed: AuthUser = JSON.parse(stored);
-        setUser(parsed);
-      } catch {
-        window.localStorage.removeItem(STORAGE_KEY);
+    const syncUser = async () => {
+      // Primero intentar obtener de localStorage
+      if (typeof window === "undefined") {
+        setLoading(false);
+        return;
       }
-    }
-    setLoading(false);
-  }, []);
+
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+
+      if (stored) {
+        try {
+          const parsed: AuthUser = JSON.parse(stored);
+          setUser(parsed);
+        } catch {
+          window.localStorage.removeItem(STORAGE_KEY);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // Si no hay usuario en localStorage pero hay sesión de NextAuth
+      if (status === "authenticated" && session?.user) {
+        try {
+          const response = await fetch(`/api/user/me?email=${session.user.email}`);
+          if (response.ok) {
+            const userData = await response.json();
+            setUser(userData);
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      }
+
+      setLoading(false);
+    };
+
+    syncUser();
+  }, [session, status]);
 
   const login = (authUser: AuthUser) => {
     setUser(authUser);
@@ -60,18 +81,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
     if (typeof window !== "undefined") {
       window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem("lookgod_cart");
+      window.localStorage.removeItem("lookgod_cupon");
     }
+    // También cerrar sesión de NextAuth
+    await signOut({ redirect: false });
   };
 
   const isAdmin = () => user?.role === "admin";
 
   const value: AuthContextType = {
     user,
-    loading,
+    loading: loading || status === "loading",
     isAuthenticated: Boolean(user),
     login,
     logout,
