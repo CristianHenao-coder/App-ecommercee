@@ -90,7 +90,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     // Sync to DB when user is logged in and items change (debounced)
     useEffect(() => {
-        if (user?.email && items.length >= 0) {
+        if (user?.email && items.length > 0) {
             const syncCart = async () => {
                 try {
                     await cartService.syncCart(
@@ -98,13 +98,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
                         items.map(i => ({ productId: i._id || "", quantity: i.quantity }))
                     );
                 } catch (error) {
-                    console.error("Error syncing cart:", error);
+                    // Silenciar error de sincronización
                 }
             };
-            const timeout = setTimeout(syncCart, 1000);
+            const timeout = setTimeout(syncCart, 2000);
             return () => clearTimeout(timeout);
         }
-    }, [items, user?.email]);
+    }, [items.length, user?.email]);
 
     const addItem = (product: Product & { selectedTalla?: string; quantity?: number }) => {
         const talla = product.selectedTalla || "M";

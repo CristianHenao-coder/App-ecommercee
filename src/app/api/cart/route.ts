@@ -32,7 +32,14 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
     try {
         await dbConnect();
-        const body = await request.json();
+        
+        let body;
+        try {
+            body = await request.json();
+        } catch {
+            return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
+        }
+        
         const { email, items } = body;
 
         if (!email) {
